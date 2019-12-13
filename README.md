@@ -11,11 +11,11 @@ Code to monitor temperature with ArduinoUno
 
 # read_temperature.py 
   * Inputs
-    ** board location
-    ** analog pin
-    ** series resistor value
-    ** output directory 
-    ** number of samples (default 10)
+    - board location
+    - analog pin
+    - series resistor value
+    - output directory 
+    - number of samples (default 10)
   * Reads analog pin voltage
   * Converts voltage to resistance of thermistor 
   * Converts resistance to temperature 
@@ -26,6 +26,6 @@ Code to monitor temperature with ArduinoUno
 
 # temp_plot.py
   * Inputs
-    ** file
+    - file
   * Plots temp. v. time
   * Autoformated!
