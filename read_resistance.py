@@ -38,6 +38,7 @@ def getResistance():
   # *
   adcVal = 0
   for i in range (0,num_samples):
+     #print("(ADC,voltage) ({},{})".format(analog_input.read(),analog_input.read()*5.0))
      adcVal = adcVal + analog_input.read() 
      time.sleep(0.1)
 
@@ -47,19 +48,31 @@ def getResistance():
   # * 
   # Compute resistance 
   # * 
- 
   resist = series_resistance * ( 1.0 / float(adcVal) - 1.00 ) 
+
+  # debug
+  print("(ADC,V,R) ({:.2f},{:.2f},{:.0f})".format(adcVal,adcVal*5.0,resist)) 
 
   return resist
 
+# * 
+# Main
+# * 
 
-while True : 
+f = open('{}/file1.txt'.format(output_directory), 'w')
+try : 
+  while True : 
+  
+    time.sleep(1.0) 
+  
+    resistance = getResistance()
+  
+    #print(resistance) 
+    f.write("{}\n".format(resistance))
 
-  time.sleep(1.0) 
-
-  resistance = getResistance()
-
-  print(resistance) 
-
+except KeyboardInterrupt:
+    # ends loop with Ctrl+C
+    f.close()
+    print("Exiting")
 
 
