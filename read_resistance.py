@@ -52,7 +52,7 @@ def getResistance():
   resist = series_resistance * ( 1.0 / float(adcVal) - 1.00 ) 
 
   # debug
-  print("{} (ADC,V,R) ({:.2f},{:.2f},{:.0f})".format(datetime.datetime.now(),adcVal,adcVal*5.0,resist)) 
+  print("{} (ADC,V,R) ({:.2f} , {:.2f} , {:.0f})".format(datetime.datetime.now(),adcVal,adcVal*5.0,resist)) 
 
   return resist
 
@@ -60,7 +60,13 @@ def getResistance():
 # Main
 # * 
 
-f = open('{}/file1.txt'.format(output_directory), 'w')
+# get start time for output file name
+file_name = "{}/{}.txt".format(output_directory,datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
+f = open(file_name, 'w')
+
+# print out helpful info
+print("To stop program enter Ctrl+C")
+
 try : 
   while True : 
   
@@ -72,8 +78,14 @@ try :
     f.write("{} {}\n".format(datetime.datetime.now(),resistance))
 
 except KeyboardInterrupt:
+
     # ends loop with Ctrl+C
     f.close()
+
+    print("")
     print("Exiting")
+    print("")
+    print("Data saved in {}".format(file_name)) 
+    print("")
 
 
