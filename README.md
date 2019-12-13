@@ -9,7 +9,7 @@ Code to monitor temperature with ArduinoUno
 * A separate script can be used to plot temperature v. time 
 
 
-#read_temperature.py 
+# read_temperature.py 
   * Inputs
     ** board location
     ** analog pin
