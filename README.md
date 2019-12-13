@@ -20,7 +20,11 @@ read_temperature.py
   # Converts resistance to temperature 
   # To stop script hit Ctrl+C
 
-plot_temperature.py
+temp_calc.py
+    converts resistance to temp
+
+temp_plot.py
   # Inputs
     * file
   # Plots temp. v. time
+  # Autoformated!

@@ -2,6 +2,7 @@ import argparse
 import pyfirmata
 import datetime
 import time
+from temp_calc import * 
 
 
 # *
@@ -52,7 +53,7 @@ def getResistance():
   resist = series_resistance * ( 1.0 / float(adcVal) - 1.00 ) 
 
   # debug
-  print("{} (ADC,V,R) ({:.2f} , {:.2f} , {:.0f})".format(datetime.datetime.now(),adcVal,adcVal*5.0,resist)) 
+  print("{} (ADC,V,R,T) ({:.2f} , {:.2f} , {:.0f}, {:0.1f} )".format(datetime.datetime.now(),adcVal,adcVal*5.0,resist,temp_from_resistance(resist))) 
 
   return resist
 
@@ -75,7 +76,7 @@ try :
     resistance = getResistance()
   
     #print(resistance) 
-    f.write("{} {}\n".format(datetime.datetime.now(),resistance))
+    f.write("{} {} {}\n".format(datetime.datetime.now(),resistance, temp_from_resistance(resistance)))
 
 except KeyboardInterrupt:
 
