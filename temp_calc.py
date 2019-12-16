@@ -2,7 +2,7 @@ import numpy as np
 
 
 
-def temp_from_resistance(resistance): 
+def getTemp(resistance): 
     # * 
     # Function to calculate temperature for any resistance                                           
     # * 
