@@ -117,7 +117,7 @@ class tempMeasurement():
 	def datePlot( self):
 		if len(self.timestamps) == 1: 
 		    figure = plt.figure()
-		    plt.ion()
+		    plt.ioff()
 		    plt.autoscale(enable=True, axis='both', tight=True)
 		    self.lines[0], = plt.plot(self.timestamps,self.temps[0], label="T0")
 		    self.lines[1], = plt.plot(self.timestamps,self.temps[1], label="T1")
@@ -141,7 +141,7 @@ class tempMeasurement():
 		    plt.xlim(self.timestamps[0],self.timestamps[-1])
 		    plt.ylim(min([min(temp) for temp in self.temps])-2, max([max(temp) for temp in self.temps])+2)
 		    plt.gcf().autofmt_xdate()
-		    plt.draw()
+		    #plt.draw()
 		    plt.savefig("currentTemp.png")
 		    plt.pause(0.1)
 		
@@ -155,8 +155,8 @@ class tempMeasurement():
 		print("")
 		print("Data saved in {}".format(self.file_name)) 
 		print("")
-		plot_filename = "plots/{}.pdf".format(self.file_name.split("/")[1])
-		plt.savefig(plot_filename)
+		plot_filename_pdf = "plots/{}.pdf".format(self.file_name.split("/")[1])
+		plt.savefig(plot_filename_pdf)
 
 # * 
 # Main

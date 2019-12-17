@@ -1,0 +1,4 @@
+plots/*pdf
+output/*txt
+.DS_Store
+__pycache__/
