@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from numpy import loadtxt
 
 # input output processing 
-txt_file = "output/2019-12-16_11:36:53.txt"
+txt_file = "output/2019-12-16_19:00:42.txt"
 plot_file = "plots/{}.pdf".format(txt_file.split("/")[1])
 
 
