@@ -3,6 +3,7 @@ import pyfirmata
 import datetime
 import time
 import matplotlib.pyplot as plt 
+import numpy as np
 from matplotlib.animation import FuncAnimation
 
 
@@ -131,20 +132,21 @@ class tempMeasurement():
 
 	def datePlot( self):
 		if len(self.timestamps) == 1: 
-		    figure = plt.figure()
-		    plt.ioff()
-		    plt.autoscale(enable=True, axis='both', tight=True)
-		    self.lines[0], = plt.plot(self.timestamps,self.temps[0], label="T0")
-		    self.lines[1], = plt.plot(self.timestamps,self.temps[1], label="T1")
-		    self.lines[2], = plt.plot(self.timestamps,self.temps[2], label="T2")
-		    self.lines[3], = plt.plot(self.timestamps,self.temps[3], label="T3")
-		    self.lines[4], = plt.plot(self.timestamps,self.temps[4], label="T4")
-		    self.lines[5], = plt.plot(self.timestamps,self.temps[5], label="T5")
-		    plt.xlabel("Time") 
-		    plt.ylabel("Temp [C]") 
-		    plt.gcf().autofmt_xdate()
-		    plt.legend()
-		    #plt.show()
+			
+			figure = plt.figure(dpi=200)
+			plt.ioff()
+			plt.autoscale(enable=True, axis='both', tight=True)
+			self.lines[0], = plt.plot(self.timestamps,self.temps[0], label="T0")
+			self.lines[1], = plt.plot(self.timestamps,self.temps[1], label="T1")
+			self.lines[2], = plt.plot(self.timestamps,self.temps[2], label="T2")
+			self.lines[3], = plt.plot(self.timestamps,self.temps[3], label="T3")
+			self.lines[4], = plt.plot(self.timestamps,self.temps[4], label="T4")
+			self.lines[5], = plt.plot(self.timestamps,self.temps[5], label="T5")
+			plt.xlabel("Time") 
+			plt.ylabel("Temp [C]") 
+			plt.gcf().autofmt_xdate()
+			plt.legend()
+			#plt.show()
 		else : 
 		    self.lines[0].set_data(self.timestamps,self.temps[0])
 		    self.lines[1].set_data(self.timestamps,self.temps[1])
@@ -158,7 +160,7 @@ class tempMeasurement():
 		    plt.gcf().autofmt_xdate()
 		    #plt.draw()
 		    plt.savefig("currentTemp.png")
-		    plt.pause(0.1)
+		    time.sleep(0.1)
 		
 		#return lines
 			

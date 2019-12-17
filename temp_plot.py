@@ -21,7 +21,7 @@ plot_directory  = args.plot_directory
 # *
 # Input output processing 
 # * 
-plot_file = "{}}/{}.pdf".format(plot_directory,input_textfile.split("/")[1])
+plot_file = "{}/{}.pdf".format(plot_directory,input_textfile.split("/")[1])
 
 # * 
 # Load text from file
@@ -33,7 +33,7 @@ temps2    = []
 temps3    = []
 temps4    = []
 temps5    = []
-for line in open(txt_file,"r").readlines():
+for line in open(input_textfile,"r").readlines():
 
     # get infos
     date   = line.split()[0]
