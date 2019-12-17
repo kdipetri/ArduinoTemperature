@@ -8,6 +8,9 @@ Code to monitor temperature with ArduinoUno
 * Resistance is convered to a temperature measurement
 * A separate script can be used to plot temperature v. time 
 
+# monitor.html 
+  * Shows currentTemp.png 
+  * Autoupdates every 10 seconds
 
 # read_temperature.py 
   * Inputs
@@ -15,16 +18,17 @@ Code to monitor temperature with ArduinoUno
     - analog pin
     - series resistor value
     - output directory 
-    - number of samples (default 10)
+    - number of samples (default 5)
   * Reads analog pin voltage
   * Converts voltage to resistance of thermistor 
   * Converts resistance to temperature 
+  * Saves output to a text file throughout measurement
+  * Autoupdates currentTemp.png for monitoring 
+  * Also saves plot of temp v. time at end of measurement 
   * To stop script hit Ctrl+C
 
-# temp_calc.py
-  * converts resistance to temp
-
 # temp_plot.py
+  * Incase plot isn't made 
   * Inputs
     - file
   * Plots temp. v. time
