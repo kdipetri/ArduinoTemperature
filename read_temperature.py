@@ -12,7 +12,7 @@ from matplotlib.animation import FuncAnimation
 # *
 parser = argparse.ArgumentParser(description="Temperature measurement with ArduinoUno voltage divider")
 parser.add_argument('-o' , '--output_directory'            , dest='output_directory'     , help='directory for saving text files with temp'              , required=False   , default = 'output' )
-parser.add_argument('-b' , '--board_location'              , dest='board_location'       , help='location of ArduinoUno, usually "/dev/xxxx"'            , required=False   , default='/dev/cu.usbmodem1421' )
+parser.add_argument('-b' , '--board_location'              , dest='board_location'       , help='location of ArduinoUno, usually "/dev/xxxx"'            , required=False   , default='/dev/ttyACM0' )
 parser.add_argument('-n' , '--num_samples'                 , dest='num_samples'          , help='number of samples per ADC measurement'                  , required=False   , default = 5   )
 parser.add_argument('-r' , '--series_resistance'           , dest='series_resistance'    , help='value of resistor in series with thermistor, in ohms'   , required=False   , default = 4700 )
 
@@ -158,7 +158,7 @@ class tempMeasurement():
 		    plt.xlim(self.timestamps[0],self.timestamps[-1])
 		    plt.ylim(min([min(temp) for temp in self.temps])-2, max([max(temp) for temp in self.temps])+2)
 		    plt.gcf().autofmt_xdate()
-		    #plt.draw()
+		    plt.draw()
 		    plt.savefig("currentTemp.png")
 		    time.sleep(0.1)
 		
@@ -172,7 +172,7 @@ class tempMeasurement():
 		print("")
 		print("Data saved in {}".format(self.file_name)) 
 		print("")
-		plot_filename_pdf = "plots/{}.pdf".format(self.file_name.split("/")[1])
+		plot_filename_pdf = "plots/{}.pdf".format(self.file_name.split("/")[1].strip(".txt"))
 		plt.savefig(plot_filename_pdf)
 
 # * 
