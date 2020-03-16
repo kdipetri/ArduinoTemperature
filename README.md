@@ -2,7 +2,9 @@
 Code to monitor temperature with ArduinoUno
 
 # Setup 
-* 5k Thermistor is connected in series with 4.7k resistor (voltage divider)
+* Can readout 5 thermistors at once, two options for each voltage divider 
+    - 10k Thermistor connected in series with 10k resistor
+    - 5k Thermistor is connected in series with 4.7k resistor 
 * 5V applied across resistors 
 * Resistance of thermistor can be measured with analog pin of Arduino (ADC)
 * Resistance is convered to a temperature measurement

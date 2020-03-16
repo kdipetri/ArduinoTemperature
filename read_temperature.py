@@ -11,25 +11,27 @@ from matplotlib.animation import FuncAnimation
 # Argument parsing
 # *
 parser = argparse.ArgumentParser(description="Temperature measurement with ArduinoUno voltage divider")
-parser.add_argument('-o' , '--output_directory'            , dest='output_directory'     , help='directory for saving text files with temp'              , required=False   , default = 'output' )
-parser.add_argument('-b' , '--board_location'              , dest='board_location'       , help='location of ArduinoUno, usually "/dev/xxxx"'            , required=False   , default='/dev/ttyACM0' )
-parser.add_argument('-n' , '--num_samples'                 , dest='num_samples'          , help='number of samples per ADC measurement'                  , required=False   , default = 5   )
-parser.add_argument('-r' , '--series_resistance'           , dest='series_resistance'    , help='value of resistor in series with thermistor, in ohms'   , required=False   , default = 4700 )
+parser.add_argument('-o' , '--output_directory'  , dest='output_directory' , help='directory for saving text files with temp'   , required=False   , default = 'output' )
+parser.add_argument('-b' , '--board_location'    , dest='board_location'   , help='location of ArduinoUno, usually "/dev/xxxx"' , required=False   , default='/dev/ttyACM0' )
+parser.add_argument('-n' , '--num_samples'       , dest='num_samples'      , help='number of samples per ADC measurement'       , required=False   , default = 5   )
+parser.add_argument('-t' , '--thermistors'       , dest='thermistors'      , help='array of different thermistors'              , required=False   , default = ["10kPTC","5kNTC","5kNTC","5kNTC","5kNTC","5kNTC"])
+parser.add_argument('-r' , '--resistors'         , dest='resistors'        , help='array of resistor values , in ohms'          , required=False   , default = [10000, 4700, 4700, 4700, 4700, 4700] )
 
 args = parser.parse_args()
 
 output_directory  = args.output_directory
 board_location    = args.board_location #can be found from Arduino IDE which scans USB ports
 num_samples       = args.num_samples
-series_resistance = args.series_resistance
+thermistors       = args.thermistors
+resistors         = args.resistors
 
 def getTimestamp():
 		datetime_str = datetime.datetime.now()  
 		return datetime_str
 
-def getTemp(resistance): 
+def getTemp5kNTC(resistance): 
     # * 
-    # Function to calculate temperature for any resistance                                           
+    # Function to calculate temperature for any resistance, using 5k thermistor                                           
     # * 
     
     # Import values from https://ae01.alicdn.com/kf/HTB1ViBCdsUrBKNjSZPxq6x00pXa8/NTC-Thermistor-Accuracy-NTC-5k-3470-10k-3435-in-sensors-Temperature-Sensor-Waterproof-Probe-pipe-50mm.jpg
@@ -45,6 +47,28 @@ def getTemp(resistance):
 
     return temperature 
 
+def getTemp10kPTC(resistance): 
+    # * 
+    # Function to calculate temperature for any resistance, using 10k thermistor                       
+    # * 
+    x_temperature = np.array([-50,-40,-30,-20,-10,0,10,20,25,30,40,50,60,70,80,90,100,110,120,130]) #Points to be used for interpolation                 
+    y_resistance  = np.array([8030.6,8427.1,8822.2,9216,9608.6,10000,10390.3,10779.4,10973.5,11167.3,11554.1,11939.7,12324.2,12707.5,13089.7,13470.7,13850.6,14229.3,14606.8,14983.2])
+
+    temperature = np.interp(resistance, np.sort(y_resistance), -np.sort(x_temperature))
+    
+    print(resistance, temperature)
+    # If debugging
+    #plt.plot(x_temperature, y_resistance, 'o')                                                      
+    #plt.show()   
+
+    return temperature 
+
+def getTemp(resistance,opt="5kNTC"):
+
+    if   opt=="5kNTC"   : return getTemp5kNTC(resistance) 
+    elif opt=="10kPTC"  : return getTemp10kPTC(resistance)
+    else                : return 30
+
 class tempMeasurement():
 
 	def __init__(self):
@@ -52,7 +76,7 @@ class tempMeasurement():
 		# board 
 		self.board = pyfirmata.Arduino(board_location)
 	
-		# analog pinx
+		# analog pins
 		self.analog_inputs = []
 
 		self.npins = 6
@@ -87,7 +111,6 @@ class tempMeasurement():
 				time.sleep(0.1)
 				adcVal_tmp = self.analog_inputs[pin].read()
 				adcVals[pin] = adcVals[pin] + adcVal_tmp 
-				#print("(pin,ADC) ({},{})".format(pin,adcVal_tmp))
 		
 		# note: in pyfirmata reading analog pins returns a decimal between 0 and 1, where 1 is max value 
 		
@@ -103,10 +126,12 @@ class tempMeasurement():
 			
 			# resistance
 			if adcVals[pin] == 0 : R[pin] = 0
-			else : R[pin] = series_resistance * ( 1.0 / float(adcVals[pin]) - 1.00 )
+			else : R[pin] = resistors[pin] * ( 1.0 / float(adcVals[pin]) - 1.00 )
 		
 			# temp
-			T[pin] = getTemp(R[pin])
+			T[pin] = getTemp(R[pin],thermistors[pin])
+
+			if pin < 2 : print("(pin,ADC,R,T) ({},{},{},{})".format(pin,adcVals[pin],R[pin],T[pin]))
 		
 		
 		# debug
@@ -185,6 +210,8 @@ def main():
 	# * 
 	# Initilize class
 	# * 
+    #thermistors        = ["10kPTC","5kPTC","5kNTC","5kNTC","5kNTC"]
+    #series_resistors   = [10000   , 4700  , 4700  , 4700  , 4700  ]
 	meas = tempMeasurement()
 	meas.initializeBoard()
 	meas.addAnalogInputs()
