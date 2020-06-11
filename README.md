@@ -35,3 +35,10 @@ Code to monitor temperature with ArduinoUno
     - file
   * Plots temp. v. time
   * Autoformated!
+
+
+# Helpful
+  * location of arduino is usually /dev/ttyACM*
+  * will need to do the following as root if its been disconnected
+  * $ usermod -a -G dialout daq
+  * note that ADC measurement should be of the voltage across fixed resistor, with respect to ground

@@ -12,7 +12,7 @@ from matplotlib.animation import FuncAnimation
 # *
 parser = argparse.ArgumentParser(description="Temperature measurement with ArduinoUno voltage divider")
 parser.add_argument('-o' , '--output_directory'  , dest='output_directory' , help='directory for saving text files with temp'   , required=False   , default = 'output' )
-parser.add_argument('-b' , '--board_location'    , dest='board_location'   , help='location of ArduinoUno, usually "/dev/xxxx"' , required=False   , default='/dev/ttyACM0' )
+parser.add_argument('-b' , '--board_location'    , dest='board_location'   , help='location of ArduinoUno, usually "/dev/xxxx"' , required=False   , default='/dev/ttyACM1' )
 parser.add_argument('-n' , '--num_samples'       , dest='num_samples'      , help='number of samples per ADC measurement'       , required=False   , default = 5   )
 parser.add_argument('-t' , '--thermistors'       , dest='thermistors'      , help='array of different thermistors'              , required=False   , default = ["10kPTC","5kNTC","5kNTC","5kNTC","5kNTC","5kNTC"])
 parser.add_argument('-r' , '--resistors'         , dest='resistors'        , help='array of resistor values , in ohms'          , required=False   , default = [10000, 4700, 4700, 4700, 4700, 4700] )
@@ -51,12 +51,14 @@ def getTemp10kPTC(resistance):
     # * 
     # Function to calculate temperature for any resistance, using 10k thermistor                       
     # * 
-    x_temperature = np.array([-50,-40,-30,-20,-10,0,10,20,25,30,40,50,60,70,80,90,100,110,120,130]) #Points to be used for interpolation                 
-    y_resistance  = np.array([8030.6,8427.1,8822.2,9216,9608.6,10000,10390.3,10779.4,10973.5,11167.3,11554.1,11939.7,12324.2,12707.5,13089.7,13470.7,13850.6,14229.3,14606.8,14983.2])
+    #x_temperature = np.array([-50,-40,-30,-20,-10,0,10,20,25,30,40,50,60,70,80,90,100,110,120,130]) #Points to be used for interpolation                 
+    #y_resistance  = np.array([8030.6,8427.1,8822.2,9216,9608.6,10000,10390.3,10779.4,10973.5,11167.3,11554.1,11939.7,12324.2,12707.5,13089.7,13470.7,13850.6,14229.3,14606.8,14983.2])
+    x_temperature = np.linspace(-30,30, num=61) #Points to be used for interpolation                 
+    y_resistance  = np.array([176683,166091,156199,146959,138332,130243,122687,115613,108991,102787,96974,91525,86415,81621,77121,72895,68927,65198,61693,58397,55298,5252380,49633,47047,44610,42314,40149,38108,36182,34366,32650,31030,29500,28054,26687,25395,24172,23016,21921,20885,19903,18973,18092,17257,16465,15714,15001,14324,13682,13052,12493,11943,11420,10922,10449,10000,9572,9164,8777,8407,8056])
 
     temperature = np.interp(resistance, np.sort(y_resistance), -np.sort(x_temperature))
     
-    print(resistance, temperature)
+    #print(resistance, temperature)
     # If debugging
     #plt.plot(x_temperature, y_resistance, 'o')                                                      
     #plt.show()   
@@ -131,7 +133,7 @@ class tempMeasurement():
 			# temp
 			T[pin] = getTemp(R[pin],thermistors[pin])
 
-			if pin < 2 : print("(pin,ADC,R,T) ({},{},{},{})".format(pin,adcVals[pin],R[pin],T[pin]))
+			if pin < 1 : print("(pin,ADC,R,T) ({},{},{},{})".format(pin,adcVals[pin],R[pin],T[pin]))
 		
 		
 		# debug
