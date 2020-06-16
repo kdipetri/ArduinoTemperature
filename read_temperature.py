@@ -47,6 +47,19 @@ def getTemp5kNTC(resistance):
 
     return temperature 
 
+def resistance_calc_10kPTC(T):
+    # *
+    # Function to calculate resistance for temp using 10k PTC thermistor
+    # * 
+    R0 = 100 # 
+    alpha = 0.00385
+    Delta = 1.4999 # for pure platinum?
+    if T < 0: 
+        Beta = 0.10863
+    else : Beta = 0
+    RT = (R0 + R0*alpha*(T - Delta*(T/100.-1)*(T/100.) - Beta*(T/100. - 1)*((T/100)**3)))*100
+    return RT
+    
 def getTemp10kPTC(resistance): 
     # * 
     # Function to calculate temperature for any resistance, using 10k thermistor                       
@@ -54,9 +67,14 @@ def getTemp10kPTC(resistance):
     #x_temperature = np.array([-50,-40,-30,-20,-10,0,10,20,25,30,40,50,60,70,80,90,100,110,120,130]) #Points to be used for interpolation                 
     #y_resistance  = np.array([8030.6,8427.1,8822.2,9216,9608.6,10000,10390.3,10779.4,10973.5,11167.3,11554.1,11939.7,12324.2,12707.5,13089.7,13470.7,13850.6,14229.3,14606.8,14983.2])
     x_temperature = np.linspace(-30,30, num=61) #Points to be used for interpolation                 
-    y_resistance  = np.array([176683,166091,156199,146959,138332,130243,122687,115613,108991,102787,96974,91525,86415,81621,77121,72895,68927,65198,61693,58397,55298,5252380,49633,47047,44610,42314,40149,38108,36182,34366,32650,31030,29500,28054,26687,25395,24172,23016,21921,20885,19903,18973,18092,17257,16465,15714,15001,14324,13682,13052,12493,11943,11420,10922,10449,10000,9572,9164,8777,8407,8056])
+    #y_resistance  = np.array([176683,166091,156199,146959,138332,130243,122687,115613,108991,102787,96974,91525,86415,81621,77121,72895,68927,65198,61693,58397,55298,5252380,49633,47047,44610,42314,40149,38108,36182,34366,32650,31030,29500,28054,26687,25395,24172,23016,21921,20885,19903,18973,18092,17257,16465,15714,15001,14324,13682,13052,12493,11943,11420,10922,10449,10000,9572,9164,8777,8407,8056])
+    #y_resistance = np.array([8822,8862,8901,8940,8980,9019,9059,9098,9137,9177,9216,9255,9295,9334,9373,9412,9452,9491,9530,9569,9609,9648,9687,9726,9765,9804,9844,9883,9922,9961,10000,10039,10078,10117,10156,10195,10234,10273,10312,10351,10390,10429,10468,10507,10546,10585,1010624,10663,10702,10740,10779,10818,10857,10896,10935,10973,11012,11051,11090,11129,11167])
+    y_resistance = np.array([])
+    for i in range(len(x_temperature)):
+        y_resistance = np.append(y_resistance,resistance_calc_10kPTC(x_temperature[i]))
+    
 
-    temperature = np.interp(resistance, np.sort(y_resistance), -np.sort(x_temperature))
+    temperature = np.interp(resistance, y_resistance, x_temperature)
     
     #print(resistance, temperature)
     # If debugging
@@ -133,7 +151,7 @@ class tempMeasurement():
 			# temp
 			T[pin] = getTemp(R[pin],thermistors[pin])
 
-			if pin < 1 : print("(pin,ADC,R,T) ({},{},{},{})".format(pin,adcVals[pin],R[pin],T[pin]))
+			#if pin < 1 : print("(pin,ADC,R,T) ({},{},{},{})".format(pin,adcVals[pin],R[pin],T[pin]))
 		
 		
 		# debug
